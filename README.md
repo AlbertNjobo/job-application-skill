@@ -17,58 +17,104 @@ An AI agent skill that automates the full job application pipeline. First-time s
 5. Tracks applications with status
 6. Validates all outputs
 
-## Quick Start
+## Installation
 
 ### Prerequisites
 ```bash
 pip install rendercv reportlab pdf2image pillow
 ```
 
-### Installation
+### Claude Code
 ```bash
-# Claude Code
-cp -r job-application ~/.claude/skills/
-
-# OpenCode/MiMo
-cp -r job-application ~/.opencode/skills/
-
-# Codex
-cp -r job-application ~/.codex/skills/
+# Clone into your skills directory
+git clone https://github.com/AlbertNjobo/job-application-skill.git ~/.claude/skills/job-application
 ```
 
-### Usage
+### OpenCode / MiMo Code
+```bash
+git clone https://github.com/AlbertNjobo/job-application-skill.git ~/.opencode/skills/job-application
+```
 
-**First time** — say "set up job application" or "create my master resume"
+### Codex
+```bash
+git clone https://github.com/AlbertNjobo/job-application-skill.git ~/.codex/skills/job-application
+```
 
-**Every time after** — share a job description and say "apply for this job"
+### Cursor / Windsurf
+```bash
+git clone https://github.com/AlbertNjobo/job-application-skill.git ~/.cursor/skills/job-application
+```
 
-## Files
+### Any Agent with Skills Support
+```bash
+# Clone anywhere your agent loads skills from
+git clone https://github.com/AlbertNjobo/job-application-skill.git /path/to/your/skills/job-application
+```
 
-| File | Purpose |
-|------|---------|
-| `SKILL.md` | Main skill definition with setup + workflow |
-| `references/soul-template.md` | Master resume structure template |
-| `references/yaml-template.md` | RenderCV YAML structure |
-| `references/cover-letter-template.md` | Cover letter entry format |
-| `references/bullet-formulas.md` | Technical bullet writing formulas |
-| `references/tailoring-checklist.md` | Pre-submission quality checklist |
-| `scripts/validate-output.sh` | Output validation script |
+## Quick Start
 
-## How soul.md Works
+**First time** — say:
+> "Set up job application" or "Create my master resume"
 
-`soul.md` is your master resume — one file with everything. When you apply, the agent selects only what's relevant. Write once, apply everywhere.
+The agent will ask for your resume, LinkedIn, GitHub, and portfolio links, then build your `soul.md` automatically.
 
-## Bullet Formula
+**Every time after** — share a job description and say:
+> "Apply for this job" or "Create application for this role"
 
-Every experience bullet should follow:
+## How It Works
+
+### soul.md (Master Resume)
+
+`soul.md` is your single source of truth. It contains:
+- Contact information
+- All work experience
+- All certifications
+- All projects
+- All skills
+- Writing rules
+
+When you apply, the agent selects only what's relevant. Write once, apply everywhere.
+
+### File Structure
+
+```
+job-application/
+├── SKILL.md                    # Main skill definition
+├── README.md                   # This file
+├── references/
+│   ├── soul-template.md        # Master resume template
+│   ├── yaml-template.md        # RenderCV YAML structure
+│   ├── cover-letter-template.md # Cover letter format
+│   ├── bullet-formulas.md      # Technical bullet writing
+│   └── tailoring-checklist.md  # Pre-submission checks
+└── scripts/
+    └── validate-output.sh      # Output validation
+```
+
+### Bullet Formula
+
+Every experience bullet follows:
 
 **Action Verb + Technical What + Scale/Impact + Technology Used**
 
 Bad: "Worked on backend services"
 Good: "Deployed 5 Node.js microservices handling 50K requests/minute, reducing coupling by 40%"
 
+## Customization
+
+Edit `soul.md` with your own information. The agent will use it as the source of truth for all applications.
+
+Edit the writing rules in `soul.md` Section 8 to match your preferences:
+- Page limits
+- Em dash policy
+- Cover letter format
+- Any other constraints
+
 ## Built With
 
 - [RenderCV](https://github.com/sinaatalay/rendercv) — CV generation from YAML
 - [ReportLab](https://www.reportlab.com/) — PDF generation
-- Designed for Claude Code, OpenCode, Codex, and other AI coding agents
+
+## License
+
+MIT — use it, fork it, make it yours.
