@@ -2,88 +2,30 @@
 
 An AI agent skill that automates the full job application pipeline. First-time setup builds your master resume from your resume, LinkedIn, GitHub, and portfolio. Then every application is one command.
 
-## What It Does
+## Install
 
-### First Time
-1. Asks for your resume, LinkedIn, GitHub, portfolio
-2. Creates `soul.md` (master resume) from that information
-3. You verify and adjust
+Paste this into your AI agent:
 
-### Every Application
-1. Parses the job description for keywords
-2. Generates a tailored CV (RenderCV YAML → PDF)
-3. Creates a cover letter (ReportLab → PDF)
-4. Outputs portal skills/certifications table
-5. Tracks applications with status
-6. Validates all outputs
-
-## Installation
-
-### Step 1: Install Dependencies
-```bash
-# Clone the repo
-git clone https://github.com/AlbertNjobo/job-application-skill.git
-cd job-application-skill
-
-# Run setup script
-bash scripts/setup.sh
+```
+Install the job-application skill:
+git clone https://github.com/AlbertNjobo/job-application-skill.git ~/.claude/skills/job-application
+pip3 install rendercv reportlab pdf2image pillow pypdf
 ```
 
-Or manually:
-```bash
-pip3 install rendercv reportlab pdf2image pillow pypdf
+Then install LaTeX (required by rendercv):
 
-# LaTeX is required for RenderCV to generate PDFs
-# Ubuntu/Debian:
+```
+# Linux (Ubuntu/Debian)
 sudo apt install texlive-xetex texlive-fonts-recommended
-# macOS:
+
+# macOS
 brew install --cask mactex
 ```
 
-### Step 2: Install the Skill
-
-Copy to your agent's skills directory:
-
-```bash
-# Claude Code
-cp -r job-application-skill ~/.claude/skills/job-application
-
-# OpenCode / MiMo
-cp -r job-application-skill ~/.opencode/skills/job-application
-
-# Codex
-cp -r job-application-skill ~/.codex/skills/job-application
-
-# Cursor
-cp -r job-application-skill ~/.cursor/skills/job-application
-```
-
-Or clone directly:
-```bash
-git clone https://github.com/AlbertNjobo/job-application-skill.git ~/.claude/skills/job-application
-```
-
-### Step 3: Configure Scripts
-
-Edit `generate_cover_letters.py`:
-```python
-LETTERS = {
-    "MY_COMPANY": {
-        "filename": "MyName_Cover_Letter_MyCompany.pdf",
-        "recipient": ["The Hiring Manager", "Company Name", "City, Country"],
-        "re": "Re: Job Title (req12345)",
-        "paragraphs": ["Hook...", "Body 1...", "Body 2...", "Closing..."],
-    },
-}
-```
-
-Edit `merge_certificates.py`:
-```python
-CERTS = [
-    ("my-cert.pdf", "My Certification Name"),
-    ("my-cert.png", "Another Certification"),
-]
-```
+**Other agents** — replace `~/.claude/skills/` with:
+- `~/.opencode/skills/` for OpenCode / MiMo
+- `~/.codex/skills/` for Codex
+- `~/.cursor/skills/` for Cursor
 
 ## Usage
 
@@ -93,14 +35,32 @@ CERTS = [
 **Every time after** — share a job description and say:
 > "Apply for this job" or "Create application for this role"
 
-## File Structure
+## What It Does
+
+### First Time
+1. Asks for your resume, LinkedIn, GitHub, portfolio
+2. Creates `soul.md` (master resume) automatically
+3. You verify and adjust
+
+### Every Application
+1. Parses the job description for keywords
+2. Generates a tailored CV (RenderCV YAML → PDF)
+3. Creates a cover letter (ReportLab → PDF)
+4. Outputs portal skills/certifications table
+5. Tracks applications with status
+6. Validates everything (em dashes, page counts)
+
+## How It Works
+
+**soul.md** is your master resume — one file with everything. When you apply, the agent selects only what's relevant. Write once, apply everywhere.
+
+## Files
 
 ```
 job-application-skill/
-├── SKILL.md                    # Main skill definition
-├── README.md                   # This file
-├── generate_cover_letters.py   # Cover letter PDF generator
-├── merge_certificates.py       # Certificate merger
+├── SKILL.md                    # Agent instructions
+├── generate_cover_letters.py   # Edit LETTERS dict, run for PDF
+├── merge_certificates.py       # Edit CERTS list, run for PDF
 ├── references/
 │   ├── soul-template.md        # Master resume template
 │   ├── yaml-template.md        # RenderCV YAML structure
@@ -108,20 +68,18 @@ job-application-skill/
 │   ├── bullet-formulas.md      # Technical bullet writing
 │   └── tailoring-checklist.md  # Pre-submission checks
 └── scripts/
-    ├── setup.sh                # Dependency installer
-    └── validate-output.sh      # Output validation
+    ├── setup.sh               # One-command dependency installer
+    └── validate-output.sh     # Output validation
 ```
 
-## Dependencies
+## Bullet Formula
 
-| Package | Purpose | Install |
-|---------|---------|---------|
-| rendercv | CV generation from YAML | `pip install rendercv` |
-| reportlab | PDF generation | `pip install reportlab` |
-| pdf2image | PDF to image conversion | `pip install pdf2image` |
-| pillow | Image processing | `pip install pillow` |
-| pypdf | PDF reading | `pip install pypdf` |
-| xelatex | LaTeX compiler (for rendercv) | `sudo apt install texlive-xetex` |
+Every experience bullet follows:
+
+**Action Verb + Technical What + Scale/Impact + Technology Used**
+
+Bad: "Worked on backend services"
+Good: "Deployed 5 Node.js microservices handling 50K requests/minute, reducing coupling by 40%"
 
 ## License
 
