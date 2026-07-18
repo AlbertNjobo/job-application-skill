@@ -4,28 +4,31 @@ An AI agent skill that automates the full job application pipeline. First-time s
 
 ## Install
 
-### Option 1: npx (easiest)
+### Option 1: CLI Install (Recommended)
 
-Paste this into your AI agent:
+```bash
+# Install globally (works across all projects)
+npx skills add AlbertNjobo/job-application-skill -g -y
 
-```
-npx job-application-skill
-```
-
-That's it. It detects your agent and installs automatically.
-
-### Option 2: git clone
-
-```
-git clone https://github.com/AlbertNjobo/job-application-skill.git ~/.claude/skills/job-application
+# Install to current project only
+npx skills add AlbertNjobo/job-application-skill -y
 ```
 
-Replace `~/.claude/skills/` with your agent's skills directory.
+### Option 2: Manual Install
 
-### Dependencies (installed automatically)
-
+```bash
+# Clone and copy to skills folder
+git clone https://github.com/AlbertNjobo/job-application-skill.git
+mkdir -p ~/.claude/skills
+cp -r job-application-skill/* ~/.claude/skills/job-application/
 ```
+
+### Dependencies
+
+```bash
 pip3 install rendercv reportlab pdf2image pillow pypdf
+
+# LaTeX (required by rendercv)
 sudo apt install texlive-xetex texlive-fonts-recommended  # Linux
 brew install --cask mactex  # macOS
 ```
@@ -62,8 +65,6 @@ brew install --cask mactex  # macOS
 ```
 job-application-skill/
 ├── SKILL.md                    # Agent instructions
-├── package.json                # npm package manifest
-├── bin/install.js              # npx install script
 ├── generate_cover_letters.py   # Edit LETTERS dict, run for PDF
 ├── merge_certificates.py       # Edit CERTS list, run for PDF
 ├── references/
