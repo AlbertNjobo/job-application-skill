@@ -7,6 +7,23 @@ description: Automates the full job application pipeline. Use when the user shar
 
 Automates the full job application workflow: master resume creation, CV tailoring, cover letter generation, portal skills recommendation, and application tracking.
 
+## Install This Skill
+
+Paste this into your agent prompt to install:
+
+```
+Install the job-application skill from https://github.com/AlbertNjobo/job-application-skill
+
+Run these commands:
+1. git clone https://github.com/AlbertNjobo/job-application-skill.git ~/.claude/skills/job-application
+2. pip3 install rendercv reportlab pdf2image pillow pypdf
+3. sudo apt install texlive-xetex texlive-fonts-recommended (Linux) OR brew install --cask mactex (macOS)
+```
+
+For OpenCode/MiMo, replace `~/.claude/skills/` with `~/.opencode/skills/`.
+For Codex, replace with `~/.codex/skills/`.
+For Cursor, replace with `~/.cursor/skills/`.
+
 ## First-Time Setup
 
 When invoked for the first time (no soul.md exists), run the setup flow:
@@ -76,9 +93,8 @@ Read `references/tailoring-checklist.md` before final submission.
 | File | Purpose |
 |------|---------|
 | `soul.md` | Master resume (source of truth) |
-| `agents.md` | Writing rules and constraints |
-| `generate_cover_letters.py` | Cover letter PDF generator |
-| `merge_certificates.py` | Certificate PDF merger |
+| `generate_cover_letters.py` | Cover letter PDF generator (edit LETTERS dict) |
+| `merge_certificates.py` | Certificate PDF merger (edit CERTS list) |
 
 ## Output Checklist
 - [ ] soul.md created and verified
