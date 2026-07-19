@@ -48,7 +48,7 @@ Key rules:
 - No em dashes, no personal pronouns in bullets
 
 ### Step 3: Render CV PDF
-Run `rendercv render applications/<role-slug>.yaml`
+Use rendercv to generate the CV from the YAML file.
 
 ### Step 4: Generate Cover Letter
 Add entry to the cover letter script's LETTERS dict (see `references/cover-letter-template.md`), then run it.
