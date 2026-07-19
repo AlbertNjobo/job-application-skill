@@ -5,7 +5,7 @@ description: Automates the full job application pipeline. Use when the user shar
 
 # Job Application Skill
 
-Automates the full job application workflow: master resume creation, CV tailoring, cover letter generation, portal skills recommendation, and application tracking.
+Automates CV tailoring, cover letter generation, and application tracking. For portal form-filling, the skill outputs a ready-to-paste skills table instead (real portal automation is fragile and login-walled).
 
 ## Scripts
 
@@ -63,10 +63,18 @@ Use rendercv to generate the CV from the YAML file.
 Edit `scripts/generate_cover_letters.py` — add an entry to the LETTERS dict (see `references/cover-letter-template.md`), then run the script.
 
 ### Step 5: Portal Skills Table
-Output table of skills/certifications to enter in the application portal.
+Output a table of skills/certifications the user can copy-paste into the application portal. This is NOT automated form-filling — it's a ready-to-paste reference.
 
 ### Step 6: Update Tracker
-Add entry to your portfolio registry with status (Ready to apply / Applied / deadline).
+Add an entry to `tracker.md` in this format:
+
+```markdown
+| Date | Company | Role | Status | Files |
+|------|---------|------|--------|-------|
+| 2026-07-19 | ZB Financial Holdings | AI/RPA Engineer | Ready to apply | YAML, CV PDF, Cover Letter PDF |
+```
+
+If `tracker.md` doesn't exist, create it with the header row above.
 
 ### Step 7: Validate
 Run `scripts/validate-output.sh` against the role slug and company name. Read `references/tailoring-checklist.md` before final submission.
@@ -76,6 +84,7 @@ Run `scripts/validate-output.sh` against the role slug and company name. Read `r
 | File | Purpose |
 |------|---------|
 | `soul.md` | Master resume (source of truth) |
+| `tracker.md` | Application tracker (created on first use) |
 | `references/` | Templates, bullet formulas, tailoring checklist |
 
 ## Output Checklist
@@ -84,4 +93,4 @@ Run `scripts/validate-output.sh` against the role slug and company name. Read `r
 - [ ] CV PDF is correct page count
 - [ ] Cover letter is 1 page
 - [ ] Zero em dashes
-- [ ] Tracker updated
+- [ ] Tracker updated with new entry
