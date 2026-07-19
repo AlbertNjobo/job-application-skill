@@ -14,12 +14,12 @@ When invoked for the first time (no soul.md exists), run the setup flow:
 ### Step 1: Gather Information
 Ask the user for (or offer to extract from):
 - **Resume/CV** (PDF or text) — paste or upload
-- **LinkedIn profile URL** — fetch with agent-reach skill
-- **GitHub profile URL** — fetch with agent-reach skill
-- **Portfolio website URL** — fetch with agent-reach skill
+- **LinkedIn profile URL**
+- **GitHub profile URL**
+- **Portfolio website URL**
 
 ### Step 2: Create soul.md
-Read `references/soul-template.md` for the structure. Fill in all sections using the gathered information. Save as `soul.md` in the working directory.
+Read `references/soul-template.md` for the structure. Fill in all sections using the gathered information.
 
 The agent should:
 - Extract contact info from LinkedIn/resume
@@ -48,15 +48,10 @@ Key rules:
 - No em dashes, no personal pronouns in bullets
 
 ### Step 3: Render CV PDF
-```bash
-rendercv render applications/<role-slug>.yaml
-```
+Run `rendercv render applications/<role-slug>.yaml`
 
 ### Step 4: Generate Cover Letter
-Add entry to `generate_cover_letters.py` LETTERS dict (see `references/cover-letter-template.md`), then run:
-```bash
-python3 generate_cover_letters.py
-```
+Add entry to the cover letter script's LETTERS dict (see `references/cover-letter-template.md`), then run it.
 
 ### Step 5: Portal Skills Table
 Output table of skills/certifications to enter in the application portal.
@@ -65,19 +60,14 @@ Output table of skills/certifications to enter in the application portal.
 Add entry to your portfolio registry with status (Ready to apply / Applied / deadline).
 
 ### Step 7: Validate
-```bash
-bash scripts/validate-output.sh <role-slug> <company>
-```
-
-Read `references/tailoring-checklist.md` before final submission.
+Run the validation script against the role slug and company name. Read `references/tailoring-checklist.md` before final submission.
 
 ## Source Files
 
 | File | Purpose |
 |------|---------|
 | `soul.md` | Master resume (source of truth) |
-| `generate_cover_letters.py` | Cover letter PDF generator (edit LETTERS dict) |
-| `merge_certificates.py` | Certificate PDF merger (edit CERTS list) |
+| `references/` | Templates, bullet formulas, tailoring checklist |
 
 ## Output Checklist
 - [ ] soul.md created and verified
