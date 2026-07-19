@@ -7,6 +7,15 @@ description: Automates the full job application pipeline. Use when the user shar
 
 Automates the full job application workflow: master resume creation, CV tailoring, cover letter generation, portal skills recommendation, and application tracking.
 
+## Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `scripts/generate_cover_letters.py` | Generates cover letter PDFs. Edit the LETTERS dict to add entries, then run it. |
+| `scripts/merge_certificates.py` | Merges certificates into a single landscape PDF. Edit the CERTS list to add files. |
+| `scripts/validate-output.sh` | Validates YAML, CV PDF, cover letter PDF, and checks for em dashes. |
+| `scripts/setup.sh` | Installs Python dependencies and checks for LaTeX. |
+
 ## First-Time Setup
 
 When invoked for the first time (no soul.md exists), run the setup flow:
@@ -51,7 +60,7 @@ Key rules:
 Use rendercv to generate the CV from the YAML file.
 
 ### Step 4: Generate Cover Letter
-Add entry to the cover letter script's LETTERS dict (see `references/cover-letter-template.md`), then run it.
+Edit `scripts/generate_cover_letters.py` — add an entry to the LETTERS dict (see `references/cover-letter-template.md`), then run the script.
 
 ### Step 5: Portal Skills Table
 Output table of skills/certifications to enter in the application portal.
@@ -60,7 +69,7 @@ Output table of skills/certifications to enter in the application portal.
 Add entry to your portfolio registry with status (Ready to apply / Applied / deadline).
 
 ### Step 7: Validate
-Run the validation script against the role slug and company name. Read `references/tailoring-checklist.md` before final submission.
+Run `scripts/validate-output.sh` against the role slug and company name. Read `references/tailoring-checklist.md` before final submission.
 
 ## Source Files
 
