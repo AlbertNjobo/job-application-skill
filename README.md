@@ -1,6 +1,6 @@
 # Job Application Skill
 
-An AI agent skill that automates the full job application pipeline. First-time setup builds your master resume from your resume, LinkedIn, GitHub, and portfolio. Then every application is one command.
+An AI agent skill that automates CV tailoring, cover letter generation, and application tracking. For application portals, it generates a ready-to-paste skills table (no automated form-filling).
 
 ## Install
 
@@ -17,7 +17,6 @@ npx skills add AlbertNjobo/job-application-skill -y
 ### Option 2: Manual Install
 
 ```bash
-# Clone and copy to skills folder
 git clone https://github.com/AlbertNjobo/job-application-skill.git
 mkdir -p ~/.claude/skills
 cp -r job-application-skill/* ~/.claude/skills/job-application/
@@ -52,13 +51,20 @@ brew install --cask mactex  # macOS
 1. Parses the job description for keywords
 2. Generates a tailored CV (RenderCV YAML → PDF)
 3. Creates a cover letter (ReportLab → PDF)
-4. Outputs portal skills/certifications table
-5. Tracks applications with status
+4. Outputs a skills/certifications table you can paste into the portal
+5. Tracks applications in `tracker.md`
 6. Validates everything (em dashes, page counts)
+
+### What It Does NOT Do
+- Does not fill out application forms automatically (portals are login-walled and fragile)
+- Does not submit applications on your behalf
+- Does not track interview rounds or offers (just application status)
 
 ## How It Works
 
 **soul.md** is your master resume — one file with everything. When you apply, the agent selects only what's relevant. Write once, apply everywhere.
+
+**tracker.md** logs every application with date, company, role, status, and files produced.
 
 ## Files
 
