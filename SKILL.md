@@ -44,6 +44,13 @@ Before creating anything, check if the user already has CV/cover letter files fo
 - Look for `Lawrence_Albert_Njobo_Cover_Letter_<Company>.pdf`
 If files exist and the user doesn't ask for changes, skip regeneration and go straight to Step 5 (Portal Skills Table) or Step 6 (Update Tracker).
 
+**Important:** When editing `generate_cover_letters.py` (fixing syntax, adding entries), do NOT run the full script to regenerate all cover letters. Only run it for the specific new entry. If the script must be run, confirm with the user first, as existing cover letters may have already been submitted.
+Before creating anything, check if the user already has CV/cover letter files for this role:
+- Look for `lawrence-njobo-<role-slug>.yaml` in the Resources directory
+- Look for `Lawrence_Njobo_<Role>_CV.pdf` or similar
+- Look for `Lawrence_Albert_Njobo_Cover_Letter_<Company>.pdf`
+If files exist and the user doesn't ask for changes, skip regeneration and go straight to Step 5 (Portal Skills Table) or Step 6 (Update Tracker).
+
 ### Step 2: Create Tailored CV YAML
 Read `references/yaml-template.md` for structure and `references/bullet-formulas.md` for writing strong bullets.
 
