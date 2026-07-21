@@ -94,6 +94,30 @@ Read `references/tailoring-checklist.md` before final submission.
 | `generate_cover_letters.py` | Cover letter PDF generator |
 | `merge_certificates.py` | Certificate PDF merger |
 
+## Folder Structure
+
+Organize tailored versions by role type:
+
+```
+applications/
+├── ai-ml/           # AI, ML, Data Science, Automation roles
+├── cloud-devops/    # Cloud, DevOps, Infrastructure roles
+├── it-support/      # IT Support, Helpdesk, Admin roles
+├── frontend/        # Frontend, Web Development roles
+├── devrel/          # Developer Relations, Advocacy roles
+├── general/         # Catch-all for unique role types
+└── archive/         # Submitted applications (6+ months old)
+```
+
+## Quarterly Review
+
+Every 3 months, review and update:
+
+- **soul.md:** Add new projects, certifications, update metrics in experience bullets
+- **Base YAMLs:** Refresh templates if skills or experience changed significantly
+- **Portfolio:** Update lawrence-njobo.me with new achievements
+- **Archive:** Move submitted applications older than 6 months to archive folder
+
 ## Output Checklist
 - [ ] soul.md created and verified
 - [ ] YAML file exists
