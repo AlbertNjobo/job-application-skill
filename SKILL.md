@@ -94,21 +94,6 @@ Read `references/tailoring-checklist.md` before final submission.
 | `generate_cover_letters.py` | Cover letter PDF generator |
 | `merge_certificates.py` | Certificate PDF merger |
 
-## Folder Structure
-
-Organize tailored versions by role type:
-
-```
-applications/
-├── ai-ml/           # AI, ML, Data Science, Automation roles
-├── cloud-devops/    # Cloud, DevOps, Infrastructure roles
-├── it-support/      # IT Support, Helpdesk, Admin roles
-├── frontend/        # Frontend, Web Development roles
-├── devrel/          # Developer Relations, Advocacy roles
-├── general/         # Catch-all for unique role types
-└── archive/         # Submitted applications (6+ months old)
-```
-
 ## Quarterly Review
 
 Every 3 months, review and update:
