@@ -46,12 +46,59 @@ Before creating anything:
 
 **c. Any deadlines already lapsed?** Compare every deadline in `tracker.md` against today's date. Report expired rows still marked "Ready to apply" so they can be closed out or chased.
 
-### Step 1.6: Choose the Output Directory
-Ask or infer where the files go. Two supported layouts:
-- **Flat** (default): straight into the working directory.
-- **Dated batch:** `applications-YYYY-MM-DD/` when preparing several applications at once. Set `output_folder` in each YAML's `settings.render_command` to a subfolder of that directory, and override `OUTPUT_DIR` when generating cover letters (see Step 4).
+### Step 1.6: Directory Layout
+Keep the working directory to a handful of entries. Everything generated lives under
+`applications/`:
 
-Pass the chosen directory to `validate-output.sh` as its third argument.
+```
+working-dir/
+├── soul.md                     # master resume, single source of truth
+├── tracker.md                  # application log
+├── generate_cover_letters.py   # live LETTERS dict
+├── .gitignore                  # see below
+├── applications/
+│   ├── active/                 # prepared, not yet sent
+│   ├── YYYY-MM-DD/             # a batch prepared on one day
+│   └── archive/                # sent, closed out, or superseded
+└── personal-docs/              # ID, transcripts, certificates. Never generated.
+```
+
+Put a single application in `applications/active/`, and several prepared together in
+`applications/YYYY-MM-DD/`. Set `output_folder` in each YAML's `settings.render_command`,
+and override `OUTPUT_DIR` when generating cover letters (Step 4). Pass the directory to
+`validate-output.sh` as its third argument.
+
+**`.gitignore` is mandatory.** `soul.md` holds a date of birth, phone number and email;
+`generate_cover_letters.py` holds real letter text. None of it belongs in a repository:
+
+```gitignore
+soul.md
+tracker.md
+personal-docs/
+generate_cover_letters.py
+applications/
+*.pdf
+*_rendercv_output/
+__pycache__/
+```
+
+### Step 1.7: Clean Up Build Output
+`rendercv` leaves a `<slug>_rendercv_output/` folder holding Typst source, per-page PNGs,
+Markdown and HTML. Only the PDF matters, and it is reproducible from the YAML in seconds.
+
+**Copy the PDF out first, then delete the folder.** Never delete one without checking, because
+a render whose PDF was never copied out leaves the build folder holding the only copy:
+
+```bash
+# every build-folder PDF must have a named copy outside it before deleting anything
+find . -path "*_rendercv_output/*.pdf" | while read p; do
+  sum=$(md5sum "$p" | cut -d' ' -f1)
+  find . -name "*.pdf" -not -path "*_rendercv_output/*" -exec md5sum {} + \
+    | grep -q "^$sum " || echo "ONLY COPY: $p"
+done
+```
+
+Delete the folders only once that prints nothing.
 
 ### Step 2: Create Tailored CV YAML
 Read `references/yaml-template.md` for structure and `references/bullet-formulas.md` for writing strong bullets.
@@ -152,7 +199,18 @@ Every 3 months, review and update:
 - **soul.md:** Add new projects, certifications, update metrics in experience bullets
 - **Base YAMLs:** Refresh templates if skills or experience changed significantly
 - **Portfolio:** Update your portfolio site with new achievements
-- **Archive:** Move submitted applications older than 6 months to archive folder
+- **Archive:** Move applications older than 6 months from `applications/active/` and dated
+  batches into `applications/archive/`. Delete any `*_rendercv_output/` folders left behind,
+  after running the only-copy check in Step 1.7.
+- **Registry audit:** Every `file://` link in the soul.md registry should resolve. Report
+  entries whose files were never generated rather than deleting them, since the entry may
+  record a real application whose artefacts were lost:
+  ```bash
+  grep -o 'file://[^)]*' soul.md | while read l; do
+    p=$(python3 -c "import sys,urllib.parse;print(urllib.parse.unquote(sys.argv[1][7:]))" "$l")
+    [ -e "$p" ] || echo "MISSING: $(basename "$p")"
+  done
+  ```
 
 ## Output Checklist
 - [ ] soul.md created and verified

@@ -97,6 +97,30 @@ Then work in that directory and the agent will find everything it needs.
 
 ## Files
 
+Your working directory should look like this. Only `soul.md`, `tracker.md` and your copy
+of `generate_cover_letters.py` are yours to edit; everything under `applications/` is
+generated.
+
+```
+working-dir/
+├── soul.md                     # master resume, never commit this
+├── tracker.md                  # application log
+├── generate_cover_letters.py   # your LETTERS dict
+├── .gitignore
+├── applications/
+│   ├── active/                 # prepared, not yet sent
+│   ├── YYYY-MM-DD/             # a batch prepared on one day
+│   └── archive/                # sent or closed out
+└── personal-docs/              # ID, transcripts, certificates
+```
+
+`rendercv` leaves a `*_rendercv_output/` folder per render containing Typst source, PNGs and
+HTML. Copy the PDF out, then delete the folder: it is reproducible from the YAML in seconds,
+and left alone these folders dominate the directory. Step 1.7 of SKILL.md has a check that
+confirms no build folder holds the only copy of a PDF before you delete any of them.
+
+## Repository layout
+
 ```
 job-application-skill/
 ├── SKILL.md                        # Agent instructions
