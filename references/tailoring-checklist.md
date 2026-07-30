@@ -50,4 +50,4 @@
 - [ ] Cover letter is exactly 1 page
 - [ ] CV is correct page count
 - [ ] soul.md portfolio registry updated
-- [ ] File named: Lawrence_Njobo_<Role>_<Company>.pdf
+- [ ] File named: <Name_Slug>_<Role_Slug>_CV.pdf and <Name_Slug>_Cover_Letter_<Company>.pdf

@@ -6,7 +6,7 @@ Add this to `generate_cover_letters.py`:
 
 ```python
 "<COMPANY_KEY>": {
-    "filename": "Lawrence_Albert_Njobo_Cover_Letter_<Company>.pdf",
+    "filename": "<Name_Slug>_Cover_Letter_<Company>.pdf",
     "recipient": [
         "The Hiring Manager",
         "<Department or Company Name>",
