@@ -102,7 +102,7 @@ g.build_pdf('<NEW_KEY>')
 
 Afterwards, confirm nothing else was touched:
 ```bash
-find . -maxdepth 1 -name "*Cover_Letter*.pdf" -newermt "today" | wc -l
+find . -maxdepth 1 -name "*Cover_Letter*.pdf" -newermt "$(date +%Y-%m-%d)" | wc -l
 ```
 
 Each LETTERS entry may carry its own `"date"` key. Entries without one fall back to the
