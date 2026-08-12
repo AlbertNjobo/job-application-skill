@@ -1,0 +1,26 @@
+{
+  "name": "albertnjobo",
+  "owner": {
+    "name": "Lawrence Albert Njobo"
+  },
+  "metadata": {
+    "description": "Agent skills by Lawrence Albert Njobo",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "job-application",
+      "description": "Turn one master profile (soul.md) into a tailored CV, cover letter, portal skills table, and tracked application for every job you apply to. Selects from bullets you already wrote; never invents one.",
+      "version": "1.0.0",
+      "source": "./",
+      "license": "MIT",
+      "homepage": "https://github.com/AlbertNjobo/job-application-skill",
+      "author": {
+        "name": "Lawrence Albert Njobo"
+      },
+      "skills": [
+        "./skills/job-application"
+      ]
+    }
+  ]
+}

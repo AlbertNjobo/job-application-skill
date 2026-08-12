@@ -4,7 +4,19 @@ An AI agent skill that automates CV tailoring, cover letter generation, and appl
 
 ## Install
 
-### Option 1: CLI Install (Recommended)
+### Option 1: Claude Code plugin marketplace
+
+Inside Claude Code:
+
+```
+/plugin marketplace add AlbertNjobo/job-application-skill
+/plugin install job-application@albertnjobo
+```
+
+Restart Claude Code afterwards so the skill loads. Update later with
+`/plugin marketplace update albertnjobo`.
+
+### Option 2: CLI Install (any agent)
 
 ```bash
 # Install globally (works across all projects)
@@ -14,12 +26,12 @@ npx skills add AlbertNjobo/job-application-skill -g -y
 npx skills add AlbertNjobo/job-application-skill -y
 ```
 
-### Option 2: Manual Install
+### Option 3: Manual Install
 
 ```bash
 git clone https://github.com/AlbertNjobo/job-application-skill.git
-mkdir -p ~/.claude/skills
-cp -r job-application-skill/* ~/.claude/skills/job-application/
+mkdir -p ~/.claude/skills/job-application
+cp -r job-application-skill/skills/job-application/* ~/.claude/skills/job-application/
 ```
 
 ### Dependencies
@@ -74,13 +86,23 @@ own working directory, which you should keep out of version control.
 
 ## Setup
 
+The simplest route is to open your agent in a new directory and say
+*"set up job application"*. It knows where its own files are and will do the rest.
+
+To do it by hand, resolve the skill directory first, since it differs by install method:
+
 ```bash
+SKILL_DIR=$(find ~/.claude/skills/job-application \
+                 ~/.claude/plugins/cache/albertnjobo \
+                 -name SKILL.md -path '*job-application*' 2>/dev/null | head -1 | xargs dirname)
+echo "$SKILL_DIR"   # sanity check: should print a directory, not empty
+
 mkdir ~/job-applications && cd ~/job-applications
-bash ~/.claude/skills/job-application/scripts/setup.sh   # creates ./.venv
+bash "$SKILL_DIR/scripts/setup.sh"    # creates ./.venv
 source .venv/bin/activate
 
-cp ~/.claude/skills/job-application/scripts/generate_cover_letters.py .
-cp ~/.claude/skills/job-application/references/soul-template.md soul.md
+cp "$SKILL_DIR/scripts/generate_cover_letters.py" .
+cp "$SKILL_DIR/references/soul-template.md" soul.md
 ```
 
 Fill in `soul.md`, or let the agent build it from your resume and LinkedIn on first run.
@@ -123,19 +145,39 @@ confirms no build folder holds the only copy of a PDF before you delete any of t
 
 ```
 job-application-skill/
-├── SKILL.md                        # Agent instructions
-├── references/
-│   ├── soul-template.md            # Master resume template
-│   ├── yaml-template.md            # RenderCV YAML structure + naming conventions
-│   ├── cover-letter-template.md    # Cover letter format
-│   ├── bullet-formulas.md          # Technical bullet writing
-│   └── tailoring-checklist.md      # Pre-submission checks
-└── scripts/
-    ├── generate_cover_letters.py   # Template: copy to your working dir, edit LETTERS
-    ├── merge_certificates.py       # Template: copy to your working dir, edit CERTS
-    ├── setup.sh                    # Dependency installer (virtualenv by default)
-    └── validate-output.sh          # Output validation
+├── .claude-plugin/
+│   ├── plugin.json                     # Claude Code plugin manifest
+│   └── marketplace.json                # Lets this repo serve as its own marketplace
+└── skills/
+    └── job-application/
+        ├── SKILL.md                    # Agent instructions
+        ├── references/
+        │   ├── soul-template.md            # Master resume template
+        │   ├── yaml-template.md            # RenderCV YAML structure + naming conventions
+        │   ├── cover-letter-template.md    # Cover letter format
+        │   ├── bullet-formulas.md          # Technical bullet writing
+        │   └── tailoring-checklist.md      # Pre-submission checks
+        └── scripts/
+            ├── generate_cover_letters.py   # Template: copy to your working dir, edit LETTERS
+            ├── merge_certificates.py       # Template: copy to your working dir, edit CERTS
+            ├── setup.sh                    # Dependency installer (virtualenv by default)
+            └── validate-output.sh          # Output validation
 ```
+
+The `skills/job-application/` nesting is what lets one repository serve both install
+routes. Claude Code's plugin loader expects skills under `skills/`, and the `skills` CLI
+falls back to searching subdirectories when there is no `SKILL.md` at the repository root,
+so `npx skills add` resolves to the same skill.
+
+The two routes install to different places:
+
+| Installed via | Skill lives at |
+|---|---|
+| `npx skills add` or manual | `~/.claude/skills/job-application/` |
+| `/plugin install` | `~/.claude/plugins/cache/albertnjobo/job-application/<version>/skills/job-application/` |
+
+The plugin path contains the version, so it changes on every release. Use `$SKILL_DIR`
+from the Setup section rather than hardcoding either.
 
 ## Validation
 
