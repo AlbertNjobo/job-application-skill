@@ -142,16 +142,14 @@ if [ -n "$COMPANY" ]; then
   fi
 fi
 
-# --- Registry and tracker ---
-if [ -f "$WORKDIR/soul.md" ]; then
-  if grep -qi "$SLUG" "$WORKDIR/soul.md"; then
-    echo "✓ soul.md registry updated"
-  else
-    echo "✗ soul.md registry not updated for: $SLUG"
-    ERRORS=$((ERRORS + 1))
-  fi
-else
-  echo "! soul.md not found in $WORKDIR (set JOB_APP_DIR?)"
+# --- Tracker ---
+# tracker.md is the application log. soul.md holds facts about the candidate,
+# not applications, so it is not checked here.
+if [ ! -f "$WORKDIR/tracker.md" ]; then
+  echo "✗ tracker.md not found in $WORKDIR (set JOB_APP_DIR?)"
+  ERRORS=$((ERRORS + 1))
+elif [ -z "$COMPANY" ]; then
+  echo "! No company given, so the tracker row was not checked"
   WARNINGS=$((WARNINGS + 1))
 fi
 

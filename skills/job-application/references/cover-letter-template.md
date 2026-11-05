@@ -7,6 +7,7 @@ Add this to `generate_cover_letters.py`:
 ```python
 "<COMPANY_KEY>": {
     "filename": "<Name_Slug>_Cover_Letter_<Company>.pdf",
+    "date": "<5 November 2026>",  # always set; defaults to the build day otherwise
     "recipient": [
         "The Hiring Manager",
         "<Department or Company Name>",
@@ -21,6 +22,9 @@ Add this to `generate_cover_letters.py`:
     ],
 },
 ```
+
+Your name and contact line come from `SENDER_NAME` and `SENDER_CONTACT` at the top of the
+file, set once. Page size is `PAGE_SIZE` (A4 by default; use `letter` for US and Canada).
 
 ## Rules
 - Exactly 1 page

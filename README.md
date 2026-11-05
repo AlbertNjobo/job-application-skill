@@ -37,11 +37,16 @@ cp -r job-application-skill/skills/job-application/* ~/.claude/skills/job-applic
 ### Dependencies
 
 ```bash
-pip3 install rendercv reportlab pdf2image pillow pypdf
+pip3 install "rendercv[full]" reportlab pdf2image pillow pypdf
+```
 
-# LaTeX (required by rendercv)
-sudo apt install texlive-xetex texlive-fonts-recommended  # Linux
-brew install --cask mactex  # macOS
+rendercv compiles PDFs with a bundled Typst library, so no LaTeX install is needed.
+`scripts/setup.sh` does all of this inside a virtualenv.
+
+```bash
+# Optional, for the validator's page and word count checks
+sudo apt install poppler-utils   # Linux
+brew install poppler             # macOS
 ```
 
 ## Usage
@@ -109,13 +114,15 @@ Fill in `soul.md`, or let the agent build it from your resume and LinkedIn on fi
 Then work in that directory and the agent will find everything it needs.
 
 > **Note:** `scripts/generate_cover_letters.py` is a template. Copy it into your working
-> directory and edit the copy. Never run it as `python3 generate_cover_letters.py` once it
-> holds real entries: the `__main__` block rewrites every letter in the dict, including
-> ones you have already sent. Generate a single letter instead:
+> directory, set your name and contact line at the top, and add one LETTERS entry per
+> application. Build letters by key, one application at a time:
 >
 > ```bash
-> python3 -c "import generate_cover_letters as g; g.build_pdf('YOUR_KEY')"
+> python3 generate_cover_letters.py YOUR_KEY
 > ```
+>
+> Run with no key, it builds nothing. That is deliberate: rebuilding every entry would
+> overwrite letters you have already sent.
 
 ## Files
 
@@ -186,13 +193,13 @@ bash scripts/validate-output.sh <role-slug> [company] [output-dir]
 ```
 
 Checks that the YAML and both PDFs exist, that page counts and cover letter length are in
-range, that no em dashes slipped through, that the tracker and registry were updated, and
+range, that no em dashes slipped through, that `tracker.md` has a row for the company, and
 that no deadline already marked "Ready to apply" has lapsed. Set `JOB_APP_DIR` if your
-`soul.md` is not in the current directory.
+`tracker.md` is not in the current directory.
 
 ## Requirements
 
-- Python 3.9+, and LaTeX for `rendercv` PDF output
+- Python 3.12+ (required by `rendercv`)
 - `poppler-utils` (`pdfinfo`, `pdftotext`) for the validator's page and word count checks
 
 ## License

@@ -1,25 +1,61 @@
 #!/usr/bin/env python3
 """Generate cover letter PDFs using ReportLab.
 
-Usage:
-    1. Add entries to the LETTERS dict below
-    2. Run: python3 generate_cover_letters.py
-    3. Output PDFs are saved to the same directory
+This file is a template. Copy it into your working directory, fill in the
+SENDER block, and add one LETTERS entry per application.
+
+Build one letter (or a few) by key:
+
+    python3 generate_cover_letters.py ACME_SWE
+    python3 generate_cover_letters.py ACME_SWE GLOBEX_DATA
+
+Or from Python, with an output folder:
+
+    import generate_cover_letters as g
+    g.OUTPUT_DIR = "applications/2026-11-05"
+    g.build_pdf("ACME_SWE")
+
+Running the file with no keys builds nothing. There is deliberately no
+"build everything" mode: rebuilding every entry would overwrite letters
+you have already sent.
 """
 
 import os
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.units import inch
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+import sys
+from datetime import date
+from xml.sax.saxutils import escape
+
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.pagesizes import A4, letter
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.lib.units import inch
+from reportlab.platypus import Paragraph, SimpleDocTemplate
 
 # ============================================================
-# COVER LETTER CONTENT — Add your entries here
+# SENDER: your details, shared by every letter
 # ============================================================
+SENDER_NAME = "YOUR NAME"
+SENDER_CONTACT = "City, Country | email@example.com | +1234567890 | yoursite.com"
+
+# A4 for most of the world, letter for the US and Canada.
+PAGE_SIZE = A4
+
+# Where PDFs are written. Relative paths resolve from the current directory.
+OUTPUT_DIR = "."
+
+# ============================================================
+# LETTERS: one entry per application
+# ============================================================
+# Optional keys per entry:
+#   "date"        printed date, e.g. "5 November 2026". Defaults to today,
+#                 so set it explicitly if you may rebuild the letter later.
+#   "salutation"  defaults to "Dear Hiring Manager:"
+#
+# Text is plain: characters such as & and < are escaped for you.
 LETTERS = {
     # "EXAMPLE_KEY": {
     #     "filename": "YourName_Cover_Letter_Example.pdf",
+    #     "date": "5 November 2026",
     #     "recipient": [
     #         "The Hiring Manager",
     #         "Company Name",
@@ -36,68 +72,72 @@ LETTERS = {
 }
 
 
+def _today():
+    d = date.today()
+    return f"{d.day} {d.strftime('%B %Y')}"
+
+
 def build_pdf(key):
+    if key not in LETTERS:
+        raise KeyError(f"No LETTERS entry named {key!r}. Known: {', '.join(LETTERS) or 'none'}")
     data = LETTERS[key]
-    filepath = data["filename"]
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    filepath = os.path.join(OUTPUT_DIR, data["filename"])
 
     doc = SimpleDocTemplate(
         filepath,
-        pagesize=letter,
+        pagesize=PAGE_SIZE,
         topMargin=0.7 * inch,
         bottomMargin=0.7 * inch,
         leftMargin=1 * inch,
         rightMargin=1 * inch,
     )
 
-    styles = getSampleStyleSheet()
+    base = getSampleStyleSheet()["Normal"]
 
-    name_style = ParagraphStyle("Name", parent=styles["Normal"],
-        fontName="Times-Bold", fontSize=16, leading=19,
-        alignment=TA_CENTER, spaceAfter=4)
-    contact_style = ParagraphStyle("Contact", parent=styles["Normal"],
-        fontName="Times-Roman", fontSize=12, leading=14,
-        alignment=TA_CENTER, spaceAfter=0)
-    date_style = ParagraphStyle("Date", parent=styles["Normal"],
-        fontName="Times-Roman", fontSize=12, leading=14,
-        alignment=TA_LEFT, spaceBefore=14, spaceAfter=0)
-    recipient_style = ParagraphStyle("Recipient", parent=styles["Normal"],
-        fontName="Times-Roman", fontSize=12, leading=14,
-        alignment=TA_LEFT, spaceBefore=14, spaceAfter=0)
-    re_style = ParagraphStyle("ReLine", parent=styles["Normal"],
-        fontName="Times-Bold", fontSize=12, leading=14,
-        alignment=TA_LEFT, spaceBefore=14, spaceAfter=0)
-    salutation_style = ParagraphStyle("Salutation", parent=styles["Normal"],
-        fontName="Times-Roman", fontSize=12, leading=14,
-        alignment=TA_LEFT, spaceBefore=14, spaceAfter=0)
-    body_style = ParagraphStyle("Body", parent=styles["Normal"],
-        fontName="Times-Roman", fontSize=12, leading=14,
-        alignment=TA_LEFT, spaceBefore=0, spaceAfter=8)
-    closing_style = ParagraphStyle("Closing", parent=styles["Normal"],
-        fontName="Times-Roman", fontSize=12, leading=14,
-        alignment=TA_LEFT, spaceBefore=14, spaceAfter=0)
-    sig_style = ParagraphStyle("Signature", parent=styles["Normal"],
-        fontName="Times-Roman", fontSize=12, leading=14,
-        alignment=TA_LEFT, spaceBefore=30, spaceAfter=0)
+    def style(name, font="Times-Roman", size=12, leading=14, align=TA_LEFT,
+              before=0, after=0):
+        return ParagraphStyle(name, parent=base, fontName=font, fontSize=size,
+                              leading=leading, alignment=align,
+                              spaceBefore=before, spaceAfter=after)
 
-    story = []
-    story.append(Paragraph("YOUR NAME", name_style))
-    story.append(Paragraph("City, Country | email@example.com | +1234567890 | yoursite.com", contact_style))
-    story.append(Paragraph("July 19, 2026", date_style))
-    for line in data["recipient"]:
-        story.append(Paragraph(line, recipient_style))
-    story.append(Paragraph(data["re"], re_style))
-    story.append(Paragraph("Dear Hiring Manager:", salutation_style))
-    for para in data["paragraphs"]:
-        story.append(Paragraph(para, body_style))
-    story.append(Paragraph("Sincerely,", closing_style))
-    story.append(Paragraph("YOUR NAME", sig_style))
+    name_style = style("Name", font="Times-Bold", size=16, leading=19,
+                       align=TA_CENTER, after=4)
+    contact_style = style("Contact", align=TA_CENTER)
+    block_style = style("Block", before=14)  # date, recipient, salutation, closing
+    re_style = style("ReLine", font="Times-Bold", before=14)
+    body_style = style("Body", after=8)
+    sig_style = style("Signature", before=30)
+
+    def p(text, st):
+        return Paragraph(escape(text), st)
+
+    story = [
+        p(SENDER_NAME, name_style),
+        p(SENDER_CONTACT, contact_style),
+        p(data.get("date") or _today(), block_style),
+    ]
+    story += [p(line, block_style) for line in data["recipient"]]
+    story.append(p(data["re"], re_style))
+    story.append(p(data.get("salutation", "Dear Hiring Manager:"), block_style))
+    story += [p(para, body_style) for para in data["paragraphs"]]
+    story.append(p("Sincerely,", block_style))
+    story.append(p(SENDER_NAME, sig_style))
 
     doc.build(story)
-    print(f"Generated: {filepath}")
+    pages = doc.page
+    print(f"Generated: {filepath} ({pages} page{'s' if pages != 1 else ''})")
+    if pages > 1:
+        print(f"WARNING: {key} runs to {pages} pages. Cover letters should fit on one.")
+    return filepath
 
 
 if __name__ == "__main__":
-    if not LETTERS:
-        print("No entries in LETTERS dict. Add your cover letter content first.")
-    for key in LETTERS:
-        build_pdf(key)
+    keys = sys.argv[1:]
+    if not keys:
+        print("Usage: python3 generate_cover_letters.py KEY [KEY ...]")
+        print(f"Entries: {', '.join(LETTERS) or 'none yet, add one to LETTERS'}")
+        sys.exit(1)
+    for k in keys:
+        build_pdf(k)

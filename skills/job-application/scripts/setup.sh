@@ -10,7 +10,7 @@
 
 set -u
 
-PACKAGES="rendercv reportlab pdf2image pillow pypdf"
+PACKAGES="rendercv[full] reportlab pdf2image pillow pypdf"
 VENV="${VENV:-.venv}"
 
 echo "=== Job Application Skill Setup ==="
@@ -21,6 +21,10 @@ if ! command -v python3 >/dev/null 2>&1; then
   exit 1
 fi
 echo "Python 3: $(python3 --version)"
+if ! python3 -c 'import sys; sys.exit(sys.version_info < (3, 12))'; then
+  echo "ERROR: rendercv needs Python 3.12 or newer."
+  exit 1
+fi
 
 # --- Resolve where to install ---
 if [ "${NO_VENV:-0}" = "1" ]; then
@@ -57,18 +61,7 @@ if ! "$PY" -m pip install $PACKAGES; then
   exit 1
 fi
 
-# --- LaTeX check (rendercv needs it to produce PDFs) ---
-echo ""
-if command -v xelatex >/dev/null 2>&1; then
-  echo "LaTeX (xelatex): installed"
-elif command -v pdflatex >/dev/null 2>&1; then
-  echo "LaTeX (pdflatex): installed"
-else
-  echo "WARNING: LaTeX not found. rendercv requires it to generate PDFs."
-  echo "  Debian/Ubuntu: sudo apt install texlive-xetex texlive-fonts-recommended"
-  echo "  Fedora:        sudo dnf install texlive-xetex texlive-collection-fontsrecommended"
-  echo "  macOS:         brew install --cask mactex"
-fi
+# rendercv compiles PDFs with a bundled Typst library. No LaTeX install is needed.
 
 # --- Optional tools used by validate-output.sh ---
 if ! command -v pdfinfo >/dev/null 2>&1 || ! command -v pdftotext >/dev/null 2>&1; then
@@ -90,6 +83,6 @@ echo ""
 echo "Next steps:"
 echo "  1. Create soul.md in your working directory (see references/soul-template.md)"
 echo "  2. Copy scripts/generate_cover_letters.py there and add your LETTERS entries"
-echo "  3. Generate ONE letter at a time, never the whole dict:"
-echo "     python3 -c \"import generate_cover_letters as g; g.build_pdf('KEY')\""
+echo "  3. Set SENDER_NAME and SENDER_CONTACT in your copy, then build one letter by key:"
+echo "     python3 generate_cover_letters.py KEY"
 echo "  4. Validate: bash scripts/validate-output.sh <role-slug> <company> [output-dir]"

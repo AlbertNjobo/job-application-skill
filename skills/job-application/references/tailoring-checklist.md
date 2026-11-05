@@ -49,5 +49,5 @@
 - [ ] Run `validate-output.sh <slug> <company>`
 - [ ] Cover letter is exactly 1 page
 - [ ] CV is correct page count
-- [ ] soul.md portfolio registry updated
+- [ ] tracker.md row added
 - [ ] File named: <Name_Slug>_<Role_Slug>_CV.pdf and <Name_Slug>_Cover_Letter_<Company>.pdf
