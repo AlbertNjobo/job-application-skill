@@ -163,6 +163,7 @@ job-application-skill/
         │   ├── yaml-template.md            # RenderCV YAML structure + naming conventions
         │   ├── cover-letter-template.md    # Cover letter format
         │   ├── bullet-formulas.md          # Technical bullet writing
+        │   ├── cv-and-letter-craft.md      # Layout, sections, verb bank, letter structure
         │   └── tailoring-checklist.md      # Pre-submission checks
         └── scripts/
             ├── generate_cover_letters.py   # Template: copy to your working dir, edit LETTERS
