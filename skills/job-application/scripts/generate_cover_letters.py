@@ -105,7 +105,9 @@ def build_pdf(key):
     name_style = style("Name", font="Times-Bold", size=16, leading=19,
                        align=TA_CENTER, after=4)
     contact_style = style("Contact", align=TA_CENTER)
-    block_style = style("Block", before=14)  # date, recipient, salutation, closing
+    block_style = style("Block", before=14)  # date, closing
+    line_style = style("Line")  # address lines after the first
+    salutation_style = style("Salutation", before=14, after=8)
     re_style = style("ReLine", font="Times-Bold", before=14)
     body_style = style("Body", after=8)
     sig_style = style("Signature", before=30)
@@ -118,9 +120,10 @@ def build_pdf(key):
         p(SENDER_CONTACT, contact_style),
         p(data.get("date") or _today(), block_style),
     ]
-    story += [p(line, block_style) for line in data["recipient"]]
+    story += [p(line, block_style if i == 0 else line_style)
+              for i, line in enumerate(data["recipient"])]
     story.append(p(data["re"], re_style))
-    story.append(p(data.get("salutation", "Dear Hiring Manager:"), block_style))
+    story.append(p(data.get("salutation", "Dear Hiring Manager:"), salutation_style))
     story += [p(para, body_style) for para in data["paragraphs"]]
     story.append(p("Sincerely,", block_style))
     story.append(p(SENDER_NAME, sig_style))
