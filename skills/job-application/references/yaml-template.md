@@ -68,6 +68,10 @@ cv:
   website: <portfolio URL from soul.md>
 design:
   theme: engineeringresumes
+  templates:
+    experience_entry:            # employer bold on line 1, role italic on line 2
+      main_column: "**COMPANY**\n*POSITION*\nSUMMARY\nHIGHLIGHTS"
+      date_and_location_column: DATE
   page:
     top_margin: 0.5in
     bottom_margin: 0.5in

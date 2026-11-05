@@ -6,6 +6,9 @@
 
 ### Examples by Role
 
+These show the shape of a strong bullet. The products and numbers are invented. Never copy a
+figure from here into a CV: every number must come from `soul.md`.
+
 **Software Engineer:**
 - Designed and deployed 5 Node.js microservices handling 50K requests/minute, reducing system coupling
 - Optimized PostgreSQL queries and implemented Redis caching, reducing API latency by 60% for 100K DAU
@@ -22,9 +25,9 @@
 - Automated deployment pipeline with GitHub Actions, enabling 50+ daily deployments with zero downtime
 
 **IT Support/Automation:**
-- Automated procurement workflows on Power Platform, reducing approval cycle times by 60% for 25+ staff
-- Deployed Freshdesk helpdesk with SLA workflows, resolving 200+ incidents in first 3 months
-- Administered Microsoft 365 and Active Directory for 500+ users, maintaining 99.5% uptime
+- Automated new-starter account setup with PowerShell, cutting onboarding time from 2 days to 2 hours
+- Rolled out a ticketing system with SLA rules, resolving 300+ requests in its first quarter
+- Administered Microsoft 365 for 400 users, migrating 60 mailboxes with no lost mail
 
 ## Metrics to Include
 

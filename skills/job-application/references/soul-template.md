@@ -118,3 +118,4 @@ This file is your single source of truth. The agent reads from it to generate ev
 - Cover letters: exactly 1 page
 - CVs: 2 pages for technical roles, 1 page for admin roles
 - Always use action verbs, never personal pronouns in bullets
+- Spelling: British (analysed, organised) or American (analyzed, organized)

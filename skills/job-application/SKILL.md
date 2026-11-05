@@ -106,6 +106,8 @@ Delete the folders only once that prints nothing.
 
 ### Step 2: Create Tailored CV YAML
 Read `references/yaml-template.md` for structure and `references/bullet-formulas.md` for writing strong bullets.
+Also read `references/cv-and-letter-craft.md` for entry layout, section order and naming,
+an action verb bank, regional conventions, and the cover letter structure used in Step 4.
 
 Key rules:
 - Only include relevant experiences, projects, certifications from soul.md
@@ -113,6 +115,10 @@ Key rules:
 - Use the technical bullet formula: Action + What + Scale/Impact + Tech
 - Skills grouped by category
 - No em dashes, no personal pronouns in bullets
+- Employer first: organisation bold on line 1, role italic on line 2 (set in the YAML template)
+- Choose Education or Experience first from what the advert screens on (see the craft guide)
+- One line per bullet, checked in the rendered PDF
+- Before drafting, list what the advert screens for and make sure each item is answered
 
 ### Step 3: Render CV PDF
 ```bash
