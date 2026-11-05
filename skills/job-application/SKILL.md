@@ -13,10 +13,14 @@ When invoked for the first time (no soul.md exists), run the setup flow:
 
 ### Step 1: Gather Information
 Ask the user for (or offer to extract from):
-- **Resume/CV** (PDF or text) — paste or upload
-- **LinkedIn profile URL** — fetch with agent-reach skill
-- **GitHub profile URL** — fetch with agent-reach skill
-- **Portfolio website URL** — fetch with agent-reach skill
+- **Resume/CV** (PDF or text), pasted or uploaded. This alone is enough to build soul.md
+- **LinkedIn profile URL** (optional)
+- **GitHub profile URL** (optional)
+- **Portfolio website URL** (optional)
+
+Fetch the URLs with whatever web tool the agent has. LinkedIn usually blocks automated
+fetching; if a page cannot be read, ask the user to paste the relevant sections instead.
+Never invent details for a page that could not be read.
 
 ### Step 2: Create soul.md
 Read `references/soul-template.md` for the structure. Fill in all sections using the gathered information. Save as `soul.md` in the working directory.
@@ -125,19 +129,19 @@ Add an entry to the LETTERS dict in the **working directory's** `generate_cover_
 (see `references/cover-letter-template.md` for the entry format).
 `scripts/generate_cover_letters.py` is only the bootstrap template. Never edit it for a live application.
 
-<!-- DANGER -->
-**Never run `python3 generate_cover_letters.py`.** Its `__main__` block loops over every
-entry in LETTERS and rewrites all of them. Letters for applications already submitted
-would be silently overwritten. Generate only the new key, in-process:
+Fill in `SENDER_NAME` and `SENDER_CONTACT` at the top of the live file once, from soul.md.
+
+Build only the new letter, by key:
 
 ```bash
-python3 -c "
-import generate_cover_letters as g
-g.build_pdf('<NEW_KEY>')
-"
+python3 generate_cover_letters.py <NEW_KEY>
 ```
 
-To write into a dated batch folder, override the output directory in the same call:
+The script builds only the keys it is given and has no "build everything" mode. Never loop
+over LETTERS to rebuild all entries: letters for applications already submitted would be
+overwritten.
+
+To write into a dated batch folder, override the output directory in-process:
 
 ```bash
 python3 -c "
@@ -152,14 +156,16 @@ Afterwards, confirm nothing else was touched:
 find . -maxdepth 1 -name "*Cover_Letter*.pdf" -newermt "$(date +%Y-%m-%d)" | wc -l
 ```
 
-Each LETTERS entry may carry its own `"date"` key. Entries without one fall back to the
-default in `build_pdf`, so adding a date to a new letter never alters existing letters.
+**Always set a `"date"` key on each entry.** Without one the letter is dated the day it is
+built, so a later rebuild would silently change the date on a letter already sent.
+The script prints the page count and warns when a letter runs past one page.
 
 ### Step 5: Portal Skills Table
 Output table of skills/certifications to enter in the application portal.
 
 ### Step 6: Update Tracker
-Add entry to your portfolio registry with status (Ready to apply / Applied / deadline).
+Add a row to `tracker.md` with date, company, role, status (Ready to apply / Applied) and
+deadline. Step 7 checks that the row exists.
 
 ### Step 7: Validate
 ```bash
@@ -202,11 +208,11 @@ Every 3 months, review and update:
 - **Archive:** Move applications older than 6 months from `applications/active/` and dated
   batches into `applications/archive/`. Delete any `*_rendercv_output/` folders left behind,
   after running the only-copy check in Step 1.7.
-- **Registry audit:** Every `file://` link in the soul.md registry should resolve. Report
-  entries whose files were never generated rather than deleting them, since the entry may
-  record a real application whose artefacts were lost:
+- **Tracker audit:** If `tracker.md` links to generated files, every `file://` link should
+  resolve. Report entries whose files were never generated rather than deleting them, since
+  the entry may record a real application whose artefacts were lost:
   ```bash
-  grep -o 'file://[^)]*' soul.md | while read l; do
+  grep -o 'file://[^)]*' tracker.md | while read l; do
     p=$(python3 -c "import sys,urllib.parse;print(urllib.parse.unquote(sys.argv[1][7:]))" "$l")
     [ -e "$p" ] || echo "MISSING: $(basename "$p")"
   done
