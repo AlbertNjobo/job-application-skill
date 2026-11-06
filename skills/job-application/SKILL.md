@@ -1,6 +1,6 @@
 ---
 name: job-application
-description: Automates the full job application pipeline. Use when the user shares a job URL or pasted description and says "apply for", "create application for", "tailor CV for", or asks about portal skills/certifications. Produces tailored CV, cover letter, portal recommendations, and tracks applications. Also use when user says "set up job application" or "create my master resume".
+description: Turns one master profile (soul.md) into a tailored CV, cover letter, portal skills table and tracked application for each job. Use when the user shares a job advert or URL and says "apply for", "tailor my CV", "write a cover letter", or asks about portal skills; when they say "set up job application", "help me apply for jobs", "create my master resume" or "start my job search"; or when they ask what the job application skill can do.
 ---
 
 # Job Application Skill
@@ -9,32 +9,98 @@ Automates the full job application workflow: master resume creation, CV tailorin
 
 ## First-Time Setup
 
-When invoked for the first time (no soul.md exists), run the setup flow:
+Run this when there is no `soul.md` in the working directory, or when the user asks to set up.
+Go one step at a time and wait for the user's answer before moving on. Never invent a fact to
+fill a gap: leave it blank and say so.
 
-### Step 1: Gather Information
-Ask the user for (or offer to extract from):
-- **Resume/CV** (PDF or text), pasted or uploaded. This alone is enough to build soul.md
-- **LinkedIn profile URL** (optional)
-- **GitHub profile URL** (optional)
-- **Portfolio website URL** (optional)
+### Step 0: Welcome
+Start with a short welcome so the user knows what they are getting. Say it in your own words,
+covering:
 
-Fetch the URLs with whatever web tool the agent has. LinkedIn usually blocks automated
-fetching; if a page cannot be read, ask the user to paste the relevant sections instead.
-Never invent details for a page that could not be read.
+> I'll build your master profile, `soul.md`, once. After that, every time you paste a job advert I
+> make a CV and a cover letter tailored to that job, a table of skills to paste into the
+> application portal, and a row in your application tracker, then check the CV and letter for
+> length and other house rules. Everything comes from `soul.md`: I reorder, cut and rephrase
+> what's there, but I never add anything that isn't.
+>
+> I don't fill in application forms or submit anything for you.
+>
+> To start I need your current CV, or about ten minutes of questions if you don't have one.
 
-### Step 2: Create soul.md
-Read `references/soul-template.md` for the structure. Fill in all sections using the gathered information. Save as `soul.md` in the working directory.
+### Step 1: Check the workspace
+- Check that `rendercv` and the Python packages are available (`rendercv --version`,
+  `python3 -c "import reportlab"`). If not, offer to run `scripts/setup.sh`, which installs them
+  in a virtualenv.
+- Create what the workflow needs, without overwriting anything that exists:
+  `tracker.md` (a table with Date, Company, Role, Status and Deadline columns), a copy of
+  `scripts/generate_cover_letters.py`, the `.gitignore` from Step 1.6, and an `applications/` folder.
 
-The agent should:
-- Extract contact info from LinkedIn/resume
-- Pull work experience bullets from resume
-- List all certifications found
-- Gather projects from GitHub
-- Group skills by category
-- Set writing rules defaults (no em dashes, 1-page cover letters, 2-page CVs)
+### Step 2: Choose a starting point
+Ask the user how they want to start, offering these options:
 
-### Step 3: Confirm
-Show the user the created soul.md and ask them to verify accuracy and add anything missing.
+1. **Upload or paste your current CV** (recommended). PDF, Word (.docx) or plain text. Read a PDF
+   with `pdftotext -layout`, a .docx with `pandoc` or `python-docx`. If the text comes out empty
+   (a scanned PDF), ask for a text or Word version instead.
+2. **Point me to your profiles.** LinkedIn, GitHub or a portfolio site. Fetch them with whatever
+   web tool you have. LinkedIn usually blocks automated fetching; if a page cannot be read, ask the
+   user to paste the relevant sections.
+3. **No CV yet: answer a few questions.** Ask one topic at a time, in this order:
+   - Name, city and country, email, phone, and any profile links
+   - The roles and countries they are applying for
+   - Education: institution, qualification, dates, result
+   - Each job, newest first: employer, role, dates, what they did, and any result they can put
+     a number on. Take numbers only from the user; never estimate one
+   - Projects, with a link if there is one
+   - Skills, split into **used in real work** and **only studied or tried**
+   - Certifications, leadership, volunteering, awards
+
+Several can be combined: a CV plus a GitHub link is a good start.
+
+### Step 3: Ask about preferences
+Ask these together, with the default in brackets, and record the answers in the Writing Rules
+section of `soul.md`:
+- CV length (2 pages; 1 page for graduate and admin roles)
+- Spelling (British or American: follow their CV if unsure)
+- Country conventions. For example, whether to include a photo or date of birth (leave both off
+  in the US, UK, Canada and Australia) and whether school results are expected (see
+  `references/cv-and-letter-craft.md`, "Regional conventions")
+- CV theme. rendercv has nine: classic, ember, engineeringclassic, engineeringresumes (default),
+  harvard, ink, moderncv, opal, sb2nov. Any of them can be switched later with one line in the CV's YAML
+
+### Step 4: Build soul.md
+Read `references/soul-template.md` for the structure and fill it from what the user gave you.
+- Keep their own wording for experience bullets. Keep every number exactly as they gave it
+- Mark anything you inferred rather than read (a date range, a skill level, a job title) with
+  `(CONFIRM)` so the user can check it
+- Put skills they have only studied or tried under "Familiar with", never under the main skills
+- End with a short **Gaps** list: missing dates, results without numbers, projects without links
+
+### Step 5: Confirm and hand over
+Show the user `soul.md`, ask them to check every `(CONFIRM)` and fill any gaps they can, then
+fill in `SENDER_NAME` and `SENDER_CONTACT` in their copy of `generate_cover_letters.py`. Finish by
+telling them exactly what to do next:
+
+> Paste a job advert (or its link) and say "apply for this job".
+
+followed by the list in "What You Can Ask For" below.
+
+## What You Can Ask For
+
+Show this list when the user says "help", asks what you can do, or seems unsure what to ask.
+Present it in plain language, not as file names.
+
+| Ask | You get |
+|---|---|
+| "Apply for this job" + an advert or link | Tailored CV and cover letter (PDFs), portal skills table, tracker row, checks |
+| "Just tailor my CV for this" | The CV only |
+| "Write a cover letter for this" | The cover letter only |
+| "What should I put in the portal's skills box?" | The portal skills table only |
+| "Use the moderncv theme" (or any of the nine) | The same CV in a different look |
+| "Add this to my profile: …" | `soul.md` updated with the new fact, marked `(CONFIRM)` if anything was inferred |
+| "What's outstanding?" | Applications still marked "Ready to apply", and any deadlines that have passed |
+| "Have I applied to [company] before?" | A check of `tracker.md` |
+| "Check this application" | `scripts/validate-output.sh` run on it |
+| "Quarterly review" | The review in "Quarterly Review" below |
 
 ## Ongoing Workflow (soul.md exists)
 
