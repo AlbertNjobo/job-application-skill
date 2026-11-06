@@ -51,8 +51,14 @@ brew install poppler             # macOS
 
 ## Usage
 
-**First time** — say:
-> "Set up job application" or "Create my master resume"
+**First time**, say:
+> "Set up job application" or "Help me apply for jobs"
+
+It explains what it does, then asks for your current CV (PDF, Word or text), your profile
+links, or, if you don't have a CV, asks you a few questions one topic at a time. It also asks
+about CV length, spelling, country conventions and theme before it builds your `soul.md`.
+
+**Not sure what to ask?** Say "help" or "what can you do" for the full list.
 
 **Every time after** — share a job description and say:
 > "Apply for this job" or "Create application for this role"
@@ -60,9 +66,11 @@ brew install poppler             # macOS
 ## What It Does
 
 ### First Time
-1. Asks for your resume, LinkedIn, GitHub, portfolio
-2. Creates `soul.md` (master resume) automatically
-3. You verify and adjust
+1. Explains what it does and checks your tools are installed
+2. Takes your current CV, profile links, or your answers to a short interview
+3. Asks your preferences: CV length, spelling, country conventions, theme
+4. Builds `soul.md`, marking anything it inferred with `(CONFIRM)` and listing gaps
+5. You check it, and it tells you exactly what to say next
 
 ### Every Application
 1. Parses the job description for keywords

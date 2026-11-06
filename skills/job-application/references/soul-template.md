@@ -1,6 +1,6 @@
 # Master Resume Template (soul.md)
 
-This file is your single source of truth. The agent reads from it to generate every tailored application. Fill in all sections — the agent will select only what's relevant for each job.
+This file is your single source of truth. The agent reads from it to generate every tailored application. Fill in all sections: the agent will select only what's relevant for each job.
 
 ---
 
@@ -78,14 +78,16 @@ This file is your single source of truth. The agent reads from it to generate ev
 
 ## 6. Certifications
 
-*   **Cert Name** — Issuing Org (Date)
+*   **Cert Name**: Issuing Org (Date)
     *Key topics covered*
-*   **Cert Name** — Issuing Org (Date)
+*   **Cert Name**: Issuing Org (Date)
     *Key topics covered*
 
 ---
 
 ## 7. Skills
+
+*Split skills into ones used in real work (below) and ones only studied or tried (Familiar with). The agent never moves a "Familiar with" skill into the main list.*
 
 ### Technical Skills
 *List all, grouped by category:*
@@ -93,6 +95,9 @@ This file is your single source of truth. The agent reads from it to generate ev
 - Frameworks: React, Django, FastAPI
 - Cloud: AWS, GCP, Azure
 - Tools: Docker, Kubernetes, Git
+
+### Familiar with (studied or tried, not used in work)
+- 
 
 ### Soft Skills
 - Communication, Teamwork, Leadership
@@ -119,3 +124,6 @@ This file is your single source of truth. The agent reads from it to generate ev
 - CVs: 2 pages for technical roles, 1 page for admin roles
 - Always use action verbs, never personal pronouns in bullets
 - Spelling: British (analysed, organised) or American (analyzed, organized)
+- Target roles and countries:
+- Country conventions: photo (no), date of birth (no), school results (only where expected)
+- CV theme: engineeringresumes (or classic, ember, engineeringclassic, harvard, ink, moderncv, opal, sb2nov)
