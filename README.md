@@ -63,6 +63,40 @@ about CV length, spelling, country conventions and theme before it builds your `
 **Every time after** — share a job description and say:
 > "Apply for this job" or "Create application for this role"
 
+## CV Themes
+
+9 ready: classic, ember, engineeringclassic, engineeringresumes, harvard, ink, moderncv, opal, sb2nov. Sample rendered with dummy data (Alex Morgan). Pick with `design: theme: <name>`.
+
+All images are first-page renders from `rendercv render` v2.8 with the same YAML, only the theme changed, so you can compare typography and spacing directly.
+
+| Theme | Best for | Notes |
+|---|---|---|
+| classic | General professional CVs | Default. Clean single column, safest for ATS. |
+| ember | Warm, modern roles | Slightly bolder headings, good for grad schemes. |
+| engineeringclassic | Engineering roles | Structured for projects and skills lists. |
+| engineeringresumes | Engineering roles | Compact, project-led, handles long highlight lists. |
+| harvard | Academic, research, finance | Serif headings, formal, fits university roles. |
+| ink | Design, creative, marketing | High contrast, strong name treatment. |
+| moderncv | Modern SaaS, startups | Tight spacing, sidebar links. |
+| opal | Clean minimal, 1-page CVs | Light weight, works well under 1 page. |
+| sb2nov | Portfolio style | Two-column feel, good for personal branding. |
+
+How to switch:
+```yaml
+design:
+  theme: engineeringresumes   # or any name above
+```
+
+Cover letters ship separately via `scripts/generate_cover_letters.py` (ReportLab PDF), same voice and details as the CV. Themes apply to the CV only.
+
+<table>
+<tr><td><img src="assets/theme-classic.png" width="48%" alt="classic"/><br/><strong>classic</strong></td><td><img src="assets/theme-ember.png" width="48%" alt="ember"/><br/><strong>ember</strong></td></tr>
+<tr><td><img src="assets/theme-engineeringclassic.png" width="48%" alt="engineeringclassic"/><br/><strong>engineeringclassic</strong></td><td><img src="assets/theme-engineeringresumes.png" width="48%" alt="engineeringresumes"/><br/><strong>engineeringresumes</strong></td></tr>
+<tr><td><img src="assets/theme-harvard.png" width="48%" alt="harvard"/><br/><strong>harvard</strong></td><td><img src="assets/theme-ink.png" width="48%" alt="ink"/><br/><strong>ink</strong></td></tr>
+<tr><td><img src="assets/theme-moderncv.png" width="48%" alt="moderncv"/><br/><strong>moderncv</strong></td><td><img src="assets/theme-opal.png" width="48%" alt="opal"/><br/><strong>opal</strong></td></tr>
+<tr><td><img src="assets/theme-sb2nov.png" width="48%" alt="sb2nov"/><br/><strong>sb2nov</strong></td><td></td></tr>
+</table>
+
 ## What It Does
 
 ### First Time
